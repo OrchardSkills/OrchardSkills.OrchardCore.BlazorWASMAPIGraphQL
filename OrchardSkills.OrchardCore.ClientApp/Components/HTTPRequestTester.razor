@@ -2,48 +2,96 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-<p>
-    <div>URI:</div>
-    <input id="request-uri" @bind="uri" size="120" />
-</p>
 
-<p>
-    <div>Method:</div>
-    <select id="request-method" @bind="method">
-        <option value="GET">GET</option>
-        <option value="POST" selected>POST</option>
-        <option value="PUT">PUT</option>
-        <option value="DELETE">DELETE</option>
-    </select>
-</p>
+    <div class="row">
+        <div class="col-2">
+            <div>Method:</div>
+            <select class="form-control" id="request-method" @bind="method">
+                <option value="GET">GET</option>
+                <option value="POST" selected>POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+        </div>
+        <div class="col-10">
+            <div>URI:</div>
+            <input class="form-control" id="request-uri" @bind="uri" />
+        </div>
+    </div>
 
-<p>
-    <div>Request body:</div>
-    <textarea id="request-body" @bind="requestBody"></textarea>
-</p>
+    <br>
+    <br>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Body</span>
+        </div>
+        <textarea id="request-body" @bind="requestBody" class="form-control" aria-label="With textarea"></textarea>
+    </div>
 
-<p>
-    <div>Request headers:</div>
+    <br>
+    <br>
+
+    <div class="pb-2">Request headers:</div>
     @foreach (var header in requestHeaders)
     {
-        <div class="header-entry">
-            Name: <input @bind="header.Name" />
-            Value: <input @bind="header.Value" />
-            <button class="btn btn-danger" @onclick="@(e => RemoveHeader(header))">remove</button>
+    <div class="header-entry pb-2">
+        <div class="row">
+            <div class="col-6 ">
+                <label> Key:</label>
+                <input class="form-control" @bind="header.Name" />
+            </div>
+            <div class="col-4">
+                <label> Value: </label>
+                <input class="form-control" @bind="header.Value" />
+            </div>
+            <div class="col-2 d-flex align-items-end">
+
+                <button class="btn btn-danger" @onclick="@(e => RemoveHeader(header))">remove</button>
+            </div>
+
         </div>
+
+
+    </div>
     }
-    <button class="btn btn-primary" id="add-header" @onclick="@AddHeader">Add</button>
-</p>
+    <button class="btn btn-primary " id="add-header" @onclick="@AddHeader">Add</button>
+    <br>
+    <br>
+    <button class="btn btn-success" id="send-request" @onclick="@DoRequest">Request</button>
 
-<button class="btn btn-success" id="send-request" @onclick="@DoRequest">Request</button>
 
-@if (responseStatusCode.HasValue)
-{
+
+
+
+    @if (responseStatusCode.HasValue)
+    {
     <h2>Response</h2>
-    <p><div>Status:</div><span id="response-status">@responseStatusCode</span></p>
-    <p><div>Body:</div><textarea id="response-body" readonly>@responseBody</textarea></p>
-    <p><div>Headers:</div><textarea id="response-headers" readonly>@responseHeaders</textarea></p>
-}
+    <p>
+    <div>Status:</div><span id="response-status">@responseStatusCode</span>
+    </p>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Body</span>
+        </div>
+        <textarea id="response-body" style="min-height: 400px;" readonly class="form-control"
+            aria-label="With textarea">@responseBody</textarea>
+    </div>
+    <br />
+    <br />
+
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Headers</span>
+        </div>
+        <textarea style="min-height: 150px;" id="response-headers" readonly class="form-control"
+            aria-label="With textarea">@responseHeaders</textarea>
+    </div>
+
+    }
+
+
+
+
 
 @code {
     private string uri = "https://localhost:5001/api/graphql";
@@ -51,7 +99,7 @@
     private string requestBody = @"{ blogPost { displayText subtitle author publishedUtc markdownBody { markdown } } }";
     private List<RequestHeader> requestHeaders = new List<RequestHeader>()
     {
-        new RequestHeader() { Name = "Content-Type", Value = "application/graphql" },
+    new RequestHeader() { Name = "Content-Type", Value = "application/graphql" },
     };
     private System.Net.HttpStatusCode? responseStatusCode;
     private string responseBody;

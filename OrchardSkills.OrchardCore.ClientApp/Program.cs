@@ -16,7 +16,7 @@ namespace OrchardSkills.OrchardCore.ClientApp
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<Counter>("my-counter");
+            // builder.RootComponents.Add<Counter>("my-counter");
             builder.RootComponents.Add<CallWebAPI>("my-callwebapi");
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

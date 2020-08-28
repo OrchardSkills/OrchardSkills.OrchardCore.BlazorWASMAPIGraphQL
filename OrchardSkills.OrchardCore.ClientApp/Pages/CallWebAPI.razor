@@ -1,9 +1,11 @@
 ﻿@page "/CallWebAPI"
 @inject HttpClient Http
+<div class="container">
+    <h1 class="h2">Call Web API</h1>
 
-<h1>CallWebAPI</h1>
+    <HTTPRequestTester />  
+</div>
 
-<HTTPRequestTester />
 
 @code {
     private const string ServiceEndpoint = "https://localhost:5001/api/graphql";
