@@ -1,56 +1,7 @@
 ﻿@page "/CallWebAPI"
-@inject HttpClient Http
+
 <div class="container">
     <h1 class="h2">Call Web API</h1>
 
     <HTTPRequestTester />  
 </div>
-
-
-@code {
-    private const string ServiceEndpoint = "https://localhost:5001/api/graphql";
-    private TodoItem[] todoItems;
-    private TodoItem editItem = new TodoItem();
-    private string editRowStyle = "none";
-    private string newItemName;
-
-    protected override async Task OnInitializedAsync() => await GetTodoItems();
-
-    private async Task GetTodoItems() => todoItems = await Http.GetFromJsonAsync<TodoItem[]>(ServiceEndpoint);
-
-    private void EditItem(long id)
-    {
-        editItem = todoItems.Single(i => i.Id == id);
-        editRowStyle = "table-row";
-    }
-
-    private async Task AddItem()
-    {
-        var addItem = new TodoItem { Name = newItemName, IsComplete = false };
-        await Http.PostAsJsonAsync(ServiceEndpoint, addItem);
-        newItemName = string.Empty;
-        await GetTodoItems();
-        editRowStyle = "none";
-    }
-
-    private async Task SaveItem()
-    {
-        await Http.PutAsJsonAsync($"{ServiceEndpoint}/{editItem.Id}", editItem);
-        await GetTodoItems();
-        editRowStyle = "none";
-    }
-
-    private async Task DeleteItem(long id)
-    {
-        await Http.DeleteAsync($"{ServiceEndpoint}/{id}");
-        await GetTodoItems();
-        editRowStyle = "none";
-    }
-
-    private class TodoItem
-    {
-        public long Id { get; set; }
-        public string Name { get; set; }
-        public bool IsComplete { get; set; }
-    }
-}
